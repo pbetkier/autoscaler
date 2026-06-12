@@ -323,7 +323,8 @@ func newCaMetrics() *caMetrics {
 				Namespace: caNamespace,
 				Name:      "function_duration_seconds",
 				Help:      "Time taken by various parts of CA main loop.",
-				Buckets:   k8smetrics.ExponentialBuckets(0.01, 1.5, 30), // 0.01, 0.015, 0.0225, ..., 852.2269299239293, 1278.3403948858938
+				Buckets:   k8smetrics.ExponentialBucketsRange(1.0, 1800.0, 100), // 1.0, ..., 1800.0 (30 minutes). We stop buckets at 30 minutes because CA healthcheck fails at 15 minutes anyway.
+			}, []string{"function"},
 			}, []string{"function"},
 		),
 
